@@ -1,5 +1,9 @@
 <template>
-  <div id="app">
+  <div
+id="app"
+       v-title
+       data-title="物流"
+>
     <router-view />
   </div>
 </template>

@@ -8,35 +8,7 @@ ref="form"
       <el-form-item label="店铺名称">
         <el-input v-model="form.name" />
       </el-form-item>
-      <!-- <el-form-item label="营业执照">
-        <el-row>
-          <el-col
-           v-for="(o, index) in 2"
-                  :key="o"
-                  :span="8"
-                  :offset="index > 0 ? 2 : 0"
-             >
-            <el-card :body-style="{ padding: '0px' }">
-              <img
-            src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                   class="image"
-         >
-              <div style="padding: 14px;">
-                <span>营业执照</span>
-                <div class="bottom clearfix">
-                  <el-button
-                    type="text"
-                             class="button"
-                       >
-                    操作按钮
-                  </el-button>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-form-item> -->
-      <el-form-item label="营业执照">
+      <el-form-item>
         <el-upload
 action="https://jsonplaceholder.typicode.com/posts/"
                    list-type="picture-card"
@@ -45,13 +17,6 @@ action="https://jsonplaceholder.typicode.com/posts/"
 >
           <i class="el-icon-plus" />
         </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img
-width="100%"
-               :src="dialogImageUrl"
-               alt=""
->
-        </el-dialog>
       </el-form-item>
       <el-form-item label="其他信息">
         <el-select
@@ -80,9 +45,7 @@ v-model="form.date1"
         <el-col
 :span="2"
                 class="line"
->
-          -
-        </el-col>
+>-</el-col>
         <el-col :span="11">
           <el-time-picker
 v-model="form.date2"
@@ -95,16 +58,13 @@ v-model="form.date2"
       <el-form-item label="其他信息">
         <el-switch v-model="form.delivery" />
       </el-form-item>
-      <el-form-item
-label="其他"
-                    信息
->
+      <el-form-item label="Resources">
         <el-radio-group v-model="form.resource">
           <el-radio label="Sponsor" />
           <el-radio label="Venue" />
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="其他信息">
+      <el-form-item label="Activity form">
         <el-input
 v-model="form.desc"
                   type="textarea"
@@ -114,12 +74,8 @@ v-model="form.desc"
         <el-button
 type="primary"
                    @click="onSubmit"
->
-          提交
-        </el-button>
-        <el-button @click="onCancel">
-          取消
-        </el-button>
+>Create</el-button>
+        <el-button @click="onCancel">Cancel</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -127,10 +83,8 @@ type="primary"
 
 <script>
 export default {
-  data () {
+  data() {
     return {
-      dialogImageUrl: '',
-      dialogVisible: false,
       form: {
         name: '',
         region: '',
@@ -144,21 +98,14 @@ export default {
     }
   },
   methods: {
-    onSubmit () {
+    onSubmit() {
       this.$message('submit!')
     },
-    onCancel () {
+    onCancel() {
       this.$message({
         message: 'cancel!',
         type: 'warning'
       })
-    },
-    handleRemove (file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePictureCardPreview (file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
     }
   }
 }
@@ -167,35 +114,6 @@ export default {
 <style scoped>
 .line {
   text-align: center;
-}
-.time {
-  font-size: 13px;
-  color: #999;
-}
-
-.bottom {
-  margin-top: 13px;
-  line-height: 12px;
-}
-
-.button {
-  padding: 0;
-  float: right;
-}
-
-.image {
-  width: 100%;
-  display: block;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-
-.clearfix:after {
-  clear: both;
 }
 </style>
 

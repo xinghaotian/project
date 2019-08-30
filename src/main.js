@@ -32,6 +32,11 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false
+Vue.directive('title', {
+  inserted: function (el, binding) {
+    document.title = el.dataset.title
+  }
+})
 
 new Vue({
   el: '#app',
