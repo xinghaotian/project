@@ -33,9 +33,11 @@ import Layout from '@/layout'
 export const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: () => import('@/views/login'),
     hidden: true
   },
+  
+   
 
   {
     path: '/404',
@@ -50,9 +52,28 @@ export const constantRoutes = [
     children: [{
       path: 'dashboard',
       name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
+      component: () => import('@/views/dashboard'),
       meta: { title: '首页', icon: 'dashboard' }
-    }]
+    },
+    {
+      name:'driver',
+      path: '/driver/:id',
+      component: () => import('@/views/driver'),
+      hidden: true
+    },
+    {
+      name:'depot',
+      path: '/depot/:id',
+      component: () => import('@/views/depot'),
+      hidden: true
+    },
+    {
+      name:'pact',
+      path: '/pact/:id',
+      component: () => import('@/views/pact'),
+      hidden: true
+    }
+  ]
   },
   {
     path: '/form',
@@ -61,7 +82,7 @@ export const constantRoutes = [
       {
         path: 'index',
         name: 'Form',
-        component: () => import('@/views/form/index'),
+        component: () => import('@/views/form'),
         meta: { title: '店铺信息', icon: 'form' }
       }
     ]
@@ -74,7 +95,30 @@ export const constantRoutes = [
         path: 'index',
         name: 'nestede',
         component: () => import('@/views/nestede'),
-        meta: { title: '订单管理', icon: 'link' }
+        meta: { title: '订单管理', icon: 'link' },
+    
+        
+      }
+    ]
+  },
+  {
+    path: '/example',
+    component: Layout,
+    redirect: '/example/table',
+    name: 'Example',
+    meta: { title: '合同制管理', icon: 'example' },
+    children: [
+      {
+        path: 'table',
+        name: 'Table',
+        component: () => import('@/views/table'),
+        meta: { title: '合同制列表', icon: 'nested' }
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('@/views/tree'),
+        meta: { title: '添加合同制用户', icon: 'tree' }
       }
     ]
   },
@@ -99,27 +143,8 @@ export const constantRoutes = [
     }]
 
   },
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: '合同制管理', icon: 'example' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: '合同制列表', icon: 'nested' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '添加合同制用户', icon: 'tree' }
-      }
-    ]
-  },
+  
+
 
   // {
   //   path: '/nested',

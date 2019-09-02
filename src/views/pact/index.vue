@@ -1,5 +1,5 @@
 <template>
-  <div/>
+  <div>合同列表</div>
 </template>
 
 <script>
