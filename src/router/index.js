@@ -72,6 +72,12 @@ export const constantRoutes = [
       path: '/pact/:id',
       component: () => import('@/views/pact'),
       hidden: true
+    },
+    {
+      name:'details',
+      path: '/details/:id',
+      component: () => import('@/views/details'),
+      hidden: true
     }
   ]
   },
@@ -87,17 +93,62 @@ export const constantRoutes = [
       }
     ]
   },
+  // {
+  //   path: '/nestede',
+  //   component: Layout,
+  //   meta: { title: '订单管理', icon: 'link' },
+  //   redirect: '/nested',
+  //   name:'Nestede',
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'nestede',
+  //       component: () => import('@/views/nestede'),
+  //       meta: { title: '整车订单', icon: 'link' },
+    
+        
+  //     }
+  //   ]
+  // },
   {
-    path: '/nestede',
+    path: '/nodetede',
     component: Layout,
+    redirect: '/nodetede/index',
+    name: 'nodetede',
+    meta: { title: '订单管理', icon: 'link' },
     children: [
       {
         path: 'index',
-        name: 'nestede',
+        name: 'Nestede',
         component: () => import('@/views/nestede'),
-        meta: { title: '订单管理', icon: 'link' },
-    
-        
+        meta: { title: '已接订单', icon: 'link' }
+      },
+      {
+        path: 'index1',
+        name: 'index1',
+        component: () => import('@/views/nestede/index1'),
+        meta: { title: '已发订单', icon: 'link' }
+      }
+      ,
+      {
+        path: 'index2',
+        name: 'index2',
+        component: () => import('@/views/nestede/index2'),
+        meta: { title: '已完成订单', icon: 'link' }
+      }
+      ,
+      {
+        path: 'index3',
+        name: 'index3',
+        component: () => import('@/views/nestede/index3'),
+        meta: { title: '在途订单', icon: 'link' }
+      }
+      ,
+      {
+        path: 'index4',
+        name: 'index4',
+        component: () => import('@/views/nestede/index4'),
+        meta: { title: '异常订单', icon: 'link' }
       }
     ]
   },
@@ -131,13 +182,13 @@ export const constantRoutes = [
     meta: { title: '财务管理', icon: 'table' },
     children: [{
       path: 'table',
-      name: 'Table',
+      name: 'aaa',
       component: () => import('@/views/cw/table'),
       meta: { title: '合同制客户对账管理', icon: 'nested' }
     },
     {
       path: 'tree',
-      name: 'Tree',
+      name: 'bbb',
       component: () => import('@/views/cw/tree'),
       meta: { title: '司机货站的支付管理', icon: 'tree' }
     }]

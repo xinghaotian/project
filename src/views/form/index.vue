@@ -4,164 +4,242 @@
       ref="form"
       :model="form"
       label-width="120px"
+      :disabled="edit"
     >
       <el-form-item
         label="店铺名称"
         style="width:500px"
       >
-        <el-input v-model="form.name" />
+        <el-input v-model="form.shop_name" />
       </el-form-item>
-
-      <!-- <el-form-item label="营业执照">
-        <el-row>
-          <el-col
-           v-for="(o, index) in 2"
-                  :key="o"
-                  :span="8"
-                  :offset="index > 0 ? 2 : 0"
-             >
-            <el-card :body-style="{ padding: '0px' }">
-              <img
-            src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                   class="image"
-         >
-              <div style="padding: 14px;">
-                <span>营业执照</span>
-                <div class="bottom clearfix">
-                  <el-button
-                    type="text"
-                             class="button"
-                       >
-                    操作按钮
-                  </el-button>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-form-item> -->
+      <el-form-item
+        label="店铺Logo"
+        style="width:500px"
+      >
+        <el-upload
+          class="avatar-uploader"
+          action="http://abc.bjlitian.com:8111/api/fileUpload"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img
+            v-if="imageUrl"
+            :src="imageUrl"
+            class="avatar"
+          >
+          <i
+            v-else
+            class="el-icon-plus avatar-uploader-icon" 
+          />
+        </el-upload>
+      </el-form-item>
       <el-form-item label="营业执照">
         <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
-          list-type="picture-card"
-          :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemove"
+          class="avatar-uploader1"
+          action="http://abc.bjlitian.com:8111/api/fileUpload"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess1"
+          :before-upload="beforeAvatarUpload1"
         >
-          <i class="el-icon-plus" />
-        </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
           <img
-            width="100%"
-            :src="dialogImageUrl"
-            alt=""
+            v-if="imageUrl1"
+            :src="imageUrl1"
+            class="avatar1"
           >
-        </el-dialog>
-      </el-form-item>
-
-      <el-form-item label="城市">
-        <el-select
-          v-model="form.province"
-          placeholder="请选择城市"
-          style="width:150px"
-          @change="setCity"
-        >
-          <el-option
-            v-for="item in provinceOptions"
-            :key="item"
-            :value="item"
-            :label="item"
+          <i
+            v-else
+            class="el-icon-plus avatar-uploader-icon" 
           />
-        </el-select>
-        <el-select
-          v-model="form.city"
-          placeholder="请选择地区"
-          style="width:150px"
-        >
-          <el-option
-            v-for="item in cityOptions"
-            :key="item"
-            :value="item"
-            :label="item"
-          />
-        </el-select>
+        </el-upload>
       </el-form-item>
       <el-form-item
         label="公司地址"
         style="width:500px"
       >
-        <el-input v-model="form.dz" />
+        <el-input
+          v-model="form.shop_addr"
+          :disabled="edit"
+        />
       </el-form-item>
       <el-form-item
         label="联系人"
         style="width:500px"
       >
-        <el-input v-model="form.desc" />
+        <el-input v-model="form.concat" />
       </el-form-item>
       <el-form-item
         label="手机号"
         style="width:500px"
       >
-        <el-input v-model="form.tel" />
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          @click="onSubmit"
-        >
-          提交
-        </el-button>
+        <el-input v-model="form.shop_phone" />
       </el-form-item>
     </el-form>
+    <el-button
+      type="primary"
+      class="onSubmit"
+      @click="onSubmit"
+    >
+      {{ this.edit ? '编辑':'提交' }}
+    </el-button>
   </div>
 </template>
 
 <script>
-import { provinces as provincesFn , citys as citysFn} from '@/api/city.js'
 export default {
   data () {
     return {
-      dialogImageUrl: '',
+       imageUrl: '', // 头像
+       imageUrl1: '', // 营业执照
+      edit:true,
       dialogVisible: false,
       form: {
-        tel:'',
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: '',
-        province: null, // 省
-        city: null // 市
+        external_id:'', //  ID
+        shop_phone:'', // 手机号
+        shop_name:'', // 店铺名称
+        shop_avatar:'', //店铺logo
+        shop_license:'',// 营业执照
+        shop_addr:'', // 公司地址
+        concat:'' // 联系人
       },
-      //省级选项
-      provinceOptions:provincesFn(),
-      //市级选项
-      cityOptions:[],
 
     }
   },
+  created(){
+    this.handleUser()
+  },
   methods: {
-    setCity (cityName) {
-      this.form.city = null
-      this.cityOptions = citysFn(cityName)
+    // 页面加载获取用户店铺信息
+    handleUser(){
+      var id = JSON.parse(window.localStorage.getItem('user_info')).id
+      this.$http({
+        method:'POST',
+        url:'/third/shopInfo',
+        data:{
+          external_id:id
+        }
+
+      }).then(res=>{
+        // console.log(1)
+        // console.log(res)
+        // console.log(2)
+        // var de = delete res.data.id
+         this.form.external_id = res.data.external_id
+         this.form.shop_phone = res.data.shop_phone
+         this.form.shop_name = res.data.shop_name
+         this.form.shop_avatar = res.data.shop_avatar
+         this.form.shop_license = res.data.shop_license
+         this.form.shop_addr = res.data.shop_addr
+         this.form.concat = res.data.concat
+         this.imageUrl = res.data.shop_avatar
+         this.imageUrl1 = res.data.shop_license
+      }).catch( err=>{
+        throw err
+      })
     },
     onSubmit () {
-      this.$message('submit!')
+      this.edit = !this.edit
+      if(this.edit){
+        // 这里是提交操作
+        this.$http({
+          method:'POST',
+          url:'/third/createShop',
+          data:this.form
+        }).then(res=>{
+          // console.log(res)
+          // this.$store.commit('changeUser', res.data)
+          this.$message({
+          message: '修改成功',
+          type: 'success'
+        })
+        }).catch(err=>{
+          throw err
+        })
+        console.log('提交成功')
+      }
+      
     },
-    handleRemove (file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePictureCardPreview (file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    }
+    //头像上传
+     handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+        console.log(res)
+        this.form.shop_avatar ='http://abc.bjlitian.com:8111/'+res.data.file
+        // http://abc.bjlitian.com:8111/externals/September2019/lvenzRQ1pIHcAIGBaNjW.jpg"
+
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
+
+    // 营业执照
+     handleAvatarSuccess1(res, file) {
+        this.imageUrl1 = URL.createObjectURL(file.raw);
+        console.log(res)
+        this.form.shop_license ='http://abc.bjlitian.com:8111/'+res.data.file
+
+
+      },
+      beforeAvatarUpload1(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      }
+
   }
 }
 </script>
 
 <style scoped>
+ .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+  .avatar1{
+    width: 220px;
+    height: 330px;
+    display: block;
+    border-radius: 6px
+
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
+    border-radius: 6px
+  }
+.onSubmit{
+  margin-left: 70px;
+}
 .line {
   text-align: center;
 }

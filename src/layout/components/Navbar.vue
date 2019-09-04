@@ -1,29 +1,39 @@
 <template>
   <div class="navbar">
-    <hamburger :is-active="sidebar.opened"
-               class="hamburger-container"
-               @toggleClick="toggleSideBar" />
+    <hamburger
+      
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
 
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <el-dropdown class="avatar-container"
-                   trigger="click">
+      <el-dropdown
+        class="avatar-container"
+        trigger="click"
+      >
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'"
-               class="user-avatar">
+          <img
+            :src="link"
+            class="user-avatar"
+          >
           <i class="el-icon-caret-bottom" />
         </div>
-        <el-dropdown-menu slot="dropdown"
-                          class="user-dropdown">
+        <el-dropdown-menu
+          slot="dropdown"
+          class="user-dropdown"
+        >
           <router-link to="/form/index">
             <el-dropdown-item>
               个人信息
             </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided>
-            <span style="display:block;"
-                  @click="logout">退出</span>
+            <span
+              style="display:block;"
+              @click="logout"
+            >退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -32,28 +42,38 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
 export default {
-  components: {
+   components: {
     Breadcrumb,
     Hamburger
   },
-  computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar'
-    ])
+  data(){
+    return{
+      link:null
+    
+    }
+  } ,
+  created () {
+    this.open()
   },
   methods: {
+    open(){
+     this.link='http://abc.bjlitian.com:8111/'+JSON.parse(window.localStorage.getItem('user_info')).avatar
+     console.log(this.link)
+
+
+     
+    },
     toggleSideBar () {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout () {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    logout () {
+      window.localStorage.clear()
+      this.$router.push({path:'/Login'})
     }
   }
 }

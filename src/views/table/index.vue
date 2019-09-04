@@ -1,87 +1,83 @@
 <template>
   <div class="app-container">
+    <el-form
+      ref="souForm"
+      :model="souForm"
+      inline
+      label-width="50px"
+    >
+      <!-- <el-form-item label="时间">
+        <el-date-picker
+          v-model="begin_end_pubdate"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          @change="handleDateChange"
+        />
+      </el-form-item> -->
+      <el-form-item
+        label="账号"
+      >
+        <el-input
+          v-model="souForm.name"
+          placeholder="请输入账号"
+        /></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button>搜索</el-button>
+      </el-form-item>
+    </el-form>
     <el-table
       v-loading="listLoading"
-      :data="list"
+      :data="form"
       element-loading-text="Loading"
       border
       fit
       highlight-current-row
     >
       <el-table-column
+        label="账号"
+        width="120"
+        prop="name"
+      />
+      <el-table-column
         align="center"
         label="姓名"
         width="100"
-      >
-        <template slot-scope="scope">
-          {{ scope.$index }}
-        </template>
-      </el-table-column>
+        prop="company_name"
+      />
       <el-table-column
         label="电话"
         width="110"
-      >
-        <template slot-scope="scope">
-          17596123669
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="头像"
-        width="90"
-        align="center"
-      >
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
+        prop="phone"
+      />
       <el-table-column
         label="注册日期"
         width="100"
         align="center"
-      >
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
-        </template>
-      </el-table-column>
-      <!-- <el-table-column
-        class-name="status-col"
-        label="账号"
-        width="160"
-        align="center"
-      >
-        <template slot-scope="scope">
-          <el-tag
-            type="success"
-            effect="dark"
-            disable-transitions="true"
-          >
-            账号
-          </el-tag>
-        </template>
-      </el-table-column> -->
-      <el-table-column
-        label="账号"
-        width="100"
+        prop="updated_at"
       />
+      
+  
       <el-table-column
         label="备注"
-        width="100"
+        width="150"
+        prop="remark"
       />
+     
       <el-table-column
-        label="合同制"
-        width="80"
-      />
-      <el-table-column
-        label="公司"
+        label="已完成订单"
         width="110"
       />
       <el-table-column
         label="在途订单"
-        width="80"
+        width="100"
       />
       <el-table-column
         label="已发订单"
-        width="80"
+        width="100"
       />
 
       <el-table-column
@@ -98,12 +94,12 @@
             >
               <i class="el-icon-view" />详情
             </el-button>
-            <el-button
+            <!-- <el-button
               size="mini"
               type="primary"
             >
               <i class="el-icon-edit-outline" />编辑
-            </el-button>
+            </el-button> -->
             <el-button
               size="mini"
               type="danger"
@@ -114,18 +110,27 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="total"
+    />
     <el-dialog
       top="5vh"
-      width="60%"
+      width="50%"
       :visible.sync="dialogFormVisible"
     >
-      <el-form :model="form">
+      <el-form
+        ref="list"
+        :model="list"
+        :disabled="edit"
+      >
         <el-form-item
           label="姓名"
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="form.name"
+            v-model="list.company_name"
             autocomplete="off"
           />
         </el-form-item>
@@ -134,16 +139,7 @@
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="form.name"
-            autocomplete="off"
-          />
-        </el-form-item>
-        <el-form-item
-          label="头像"
-          :label-width="formLabelWidth"
-        >
-          <el-input
-            v-model="form.name"
+            v-model="list.phone"
             autocomplete="off"
           />
         </el-form-item>
@@ -152,7 +148,7 @@
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="form.name"
+            v-model="list.created_at"
             autocomplete="off"
           />
         </el-form-item>
@@ -161,7 +157,7 @@
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="form.name"
+            v-model="list.name"
             autocomplete="off"
           />
         </el-form-item>
@@ -170,25 +166,16 @@
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="form.name"
+            v-model="list.remark"
             autocomplete="off"
           />
         </el-form-item>
         <el-form-item
-          label="合同制"
+          label="已完成订单"
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="form.name"
-            autocomplete="off"
-          />
-        </el-form-item>
-        <el-form-item
-          label="公司"
-          :label-width="formLabelWidth"
-        >
-          <el-input
-            v-model="form.name"
+            v-model="list.e"
             autocomplete="off"
           />
         </el-form-item>
@@ -197,7 +184,7 @@
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="form.name"
+            v-model="list.f"
             autocomplete="off"
           />
         </el-form-item>
@@ -206,7 +193,7 @@
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="form.name"
+            v-model="list.o"
             autocomplete="off"
           />
         </el-form-item>
@@ -215,14 +202,14 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="dialogFormVisible = false">
-          取 消
+        <el-button @click="handleC()">
+          退出
         </el-button>
         <el-button
           type="primary"
-          @click="dialogFormVisible = false"
+          @click="handleB()"
         >
-          确 定
+          {{ this.edit ? '编辑':'提交' }}
         </el-button>
       </div>
     </el-dialog>
@@ -230,48 +217,108 @@
 </template>
 
 <script>
-import { getList } from '@/api/table'
 
 export default {
-  filters: {
-    statusFilter (status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
+  // http://abc.bjlitian.com:8111/api/third/shippers
   data () {
     return {
-       formLabelWidth: '120px',
-        dialogFormVisible: false,
-      list: null,
-      listLoading: true,
-      form:{
+      total:30,
+      souForm:{
+       name:'',
+      //  begin_pubdate: '', // 开始时间
+      //   end_pubdate: '' // 结束时间
+      },
+      // begin_end_pubdate:[], // 存储日期选择器同步的 [开始时间，结束时间]
 
-      }
+      edit:true,
+      formLabelWidth: '120px',
+      dialogFormVisible: false,
+      list: {
+      },
+      listLoading: true,
+      form:null
     }
   },
   created () {
+    // 第一次获取页面信息
+    this.handleG()
     this.fetchData()
   },
   methods: {
+    // 搜索
+    // handleDateChange(value){
+    //   this.filterParams.begin_pubdate = value[0]
+    //   this.filterParams.end_pubdate = value[1]
+    // },
+    // 第一次获取页面信息
+    handleG(){
+      let id = JSON.parse(window.localStorage.getItem('user_info')).id
+      this.$http({
+        method:'POST',
+        url:'/third/shippers',
+        data:{
+          external_id:id,
+          per_page:10
+        }
+      }).then(res=>{
+        this.form = res.data.data
+        console.log(res)
+      }).catch(err=>{
+        throw err
+      })
+    },
+    // 详情
     handleEdit(index, row){
+      console.log(row)
+      this.list = row
     this.dialogFormVisible = true
     },
+    // 详情页面编辑
+    // dialogFormVisible = false 关闭弹窗
+    handleB(){
+    this.edit = !this.edit
+    // 下面是提交操作
+
+    },
+    // 退出
+    handleC(){
+      if(this.edit){
+        this.dialogFormVisible = false
+      }else{
+        this.$confirm('还未提交, 是否继续退出?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '退出成功!'
+          });
+          this.dialogFormVisible = false
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消退出'
+          });          
+        });
+      }
+      
+
+  
+    },
     fetchData () {
-      this.listLoading = true
-      getList().then(response => {
-        this.list = response.data.items
-        this.listLoading = false
-      })
+      this.listLoading = false
     },
   }
 }
 </script>
 <style>
+.el-dialog{
+  width: 50%;
+}
+.el-input{
+  width: 400px;
+}
 .flex {
   display: flex;
 }
@@ -280,6 +327,17 @@ export default {
 }
 .cell {
   text-align: center;
+}
+.el-input__inner{
+  width: 300px;
+}
+.el-input{
+  width: 300px;
+}
+.el-pagination{
+  margin-top: 20px;
+  float: right;
+  padding-right:0px;
 }
 </style>
 

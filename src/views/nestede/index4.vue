@@ -20,7 +20,7 @@
         />
       </el-form-item> -->
 
-      <el-form-item
+      <!-- <el-form-item
         label="货主"
         label-width="40px"
       >
@@ -29,7 +29,7 @@
           placeholder="请输入账号"
           type="text"
         /></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item
         label="订单号"
         label-width="60px"
@@ -60,10 +60,10 @@
           type="text"
         /></el-input>
       </el-form-item>
-      <el-form-item
+      <!-- <el-form-item
         label="  订单类型"
         label-width="70px"
-      >
+       >
         <el-select
           v-model="souForm.d"
           placeholder="请选择订单类型"
@@ -85,7 +85,7 @@
             value="投保订单" 
           />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary">
           搜索
@@ -101,14 +101,19 @@
       <el-table-column
         prop="date"
         label="类型"
-        width="50"
+        width="100"
       >
         整车
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="name"
         label="货主"
         width="70"
+      /> -->
+      <el-table-column
+        prop="name"
+        label="货主电话"
+        width="140"
       />
       <el-table-column
         width="120"
@@ -117,15 +122,15 @@
       />
       <el-table-column
         prop="addr_from"
-
+        width="180"
         label="出发地"
       />
       <el-table-column
-
+        width="180"
         label="目的地"
         prop="addr_to"
       />
-      <el-table-column
+      <!-- <el-table-column
         width="80"
         label="总体积"
         prop="volume"
@@ -134,25 +139,25 @@
         width="60"
         label="总重量"
         prop="weight"
-      />
+      /> -->
       <el-table-column
-        width="160"
+        width="100"
         label="创建时间"
         prop="created_at"
       />
       <el-table-column
-        width="160"
+        width="100"
         label="接单时间"
         prop="updated_at"
       />
       <el-table-column
-        width="80"
+
         label="状态"
       />
       <el-table-column
         prop="delete"
-        label="下发操作"
-        width="280"
+        label="操作"
+        width="120"
       >
         <template slot-scope="scope">
           <el-button
@@ -161,9 +166,9 @@
             plain
             @click=" handleDetails (scope.$index, scope.row)"
           >
-            运单追踪
+            发送
           </el-button>
-          <el-button
+          <!-- <el-button
             size="mini"
             type="success"
             plain
@@ -178,7 +183,7 @@
             @click="$router.push(`/driver/${scope.$index}`)"
           >
             货站
-          </el-button>
+          </el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -199,12 +204,12 @@ type="text"
 <script>
 
 export default {
-  name:'Car',
+  name:'Car4',
   data () {
     return {
       page:1,
       total:null,
-      value1:[],
+      // value1:[],
       time:'',
       // 搜索功能表单
       souForm:{
@@ -256,11 +261,11 @@ export default {
       })
     },
     // 详情
-    handleDetails(index, row){
-      this.$router.push({
-              path: `/details/${index}`,
-            })
-    },
+    // handleDetails(index, row){
+    //   this.$router.push({
+    //           path: `/details/${index}`,
+    //         })
+    // },
     handleEdit (index, row) {
       this.$router.push({
               path: `/depot/${index}`,

@@ -109,7 +109,7 @@
   <div>
     <div class="heard">
       <div class="time">
-        <div class="time-data1"/>
+        <div class="time-data1" />
         <div class="time-data">
           <i class="iconfont">&#xe882;</i>
           <div class="right">
@@ -163,7 +163,19 @@
 </template>
 
 <script>
+export default {
+  data(){
+    return{
 
+    }
+  },
+  created(){
+    
+  },
+  methods:{
+     
+  }
+}
 </script>
 
 <style>

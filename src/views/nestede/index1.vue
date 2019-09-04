@@ -101,7 +101,7 @@
       <el-table-column
         prop="date"
         label="类型"
-        width="50"
+        width="100"
       >
         整车
       </el-table-column>
@@ -151,8 +151,8 @@
       />
       <el-table-column
         prop="delete"
-        label="下发操作"
-        width="280"
+        label="操作"
+        width="120"
       >
         <template slot-scope="scope">
           <el-button
@@ -163,7 +163,7 @@
           >
             运单追踪
           </el-button>
-          <el-button
+          <!-- <el-button
             size="mini"
             type="success"
             plain
@@ -178,7 +178,7 @@
             @click="$router.push(`/driver/${scope.$index}`)"
           >
             货站
-          </el-button>
+          </el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -199,7 +199,7 @@ type="text"
 <script>
 
 export default {
-  name:'Car',
+  name:'Car1',
   data () {
     return {
       page:1,

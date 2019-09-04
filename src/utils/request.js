@@ -1,85 +1,90 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
-import store from '@/store'
-import { getToken } from '@/utils/auth'
+import Vue from 'vue'
+import qs from 'qs'
 
-// create an axios instance
-const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+// import { MessageBox, Message } from 'element-ui'
+// import store from '@/store'
+// import { getToken } from '@/utils/auth'
+
+axios.defaults.baseURL = 'http://abc.bjlitian.com:8111/api/'
+
+
+
+axios.interceptors.request.use((config) => {
+  if(config.method  === 'post'){
+    config.data = qs.stringify(config.data);
+  }
+  return config;
+},(error) =>{
+  return Promise.reject(error);
+});
+
+Vue.prototype.$http = axios
+// axios.interceptors.response.use((res) => {
+//   // token 已过期，重定向到登录页面
+//   if (res.date.code === 500) {
+//     localStorage.clear()
+//     router.replace({
+//       path: '/sigin',
+//       query: {redirect: router.currentRoute.fullPath} 
+//     })
+//   }
+//   return res
+// }, function(err) {
+//   return Promise.reject(error) 
+// })
+axios.interceptors.response.use(response => { // >= 200 && < 400 的状态码进入这里
+  // console.log('response => ', response)
+  // return response
+  // if(response.data.code == 200){
+  // 将响应数据处理成统一的数据格式方便使用
+   console.log('response => ', response)
+   return response.data
+  // return response.data.data
+  // 如果返回的数据格式是对象
+  // if (typeof response.data === 'object' && response.data.data) {
+  //   return response.data.data
+  // } else {
+  //   return response.data
+  // }
+  //  }else {
+  //   window.localStorage.removeItem('user_info')
+  //   return response.data
+  //  }
+}, error => { // >= 400 的状态码会进入这里
+  // console.dir(error)
+  const status = error.response.status
+  if (status === 401) {
+    // 务必删除本地存储中的用户信息数据
+    window.localStorage.removeItem('user_info')
+
+    // 跳转到登录页面
+    router.push({
+      name: 'login'
+    })
+  }
+  return Promise.reject(error)
 })
 
-// request interceptor
-service.interceptors.request.use(
-  config => {
-    // do something before request is sent
+// axios.interceptors.response.use(response => {
+//   return response;
+// },error => {
+//   if (error.response) {
+//    switch (error.response.status) {
+//      // 返回401，清除token信息并跳转到登录页面
+//      case 500:
+//      console.log('错误')
+//     //  localStorage.removeItem('token');
+//     //  router.replace({
+//     //    path: '/login'
+//     //    //登录成功后跳入浏览的当前页面
+//     //    // query: {redirect: router.currentRoute.fullPath}
+//     //  })
+//    }
+//    // 返回接口返回的错误信息
+//    return Promise.reject(error.response.data);
+//  }
+// });
 
-    if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
-    }
-    return config
-  },
-  error => {
-    // do something with request error
-    console.log(error) // for debug
-    return Promise.reject(error)
-  }
-)
 
-// response interceptor
-service.interceptors.response.use(
-  /**
-   * If you want to get http information such as headers or status
-   * Please return  response => response
-  */
-
-  /**
-   * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
-   */
-  response => {
-    const res = response.data
-
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
-
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
-      }
-      return Promise.reject(new Error(res.message || 'Error'))
-    } else {
-      return res
-    }
-  },
-  error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
-    return Promise.reject(error)
-  }
-)
-
-export default service
+export default axios

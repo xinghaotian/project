@@ -101,7 +101,7 @@
       <el-table-column
         prop="date"
         label="类型"
-        width="50"
+        width="100"
       >
         整车
       </el-table-column>
@@ -151,8 +151,8 @@
       />
       <el-table-column
         prop="delete"
-        label="下发操作"
-        width="280"
+        label="操作"
+        width="120"
       >
         <template slot-scope="scope">
           <el-button
@@ -162,22 +162,6 @@
             @click=" handleDetails (scope.$index, scope.row)"
           >
             运单追踪
-          </el-button>
-          <el-button
-            size="mini"
-            type="success"
-            plain
-            @click=" handleEdit (scope.$index, scope.row)"
-          >
-            司机
-          </el-button>
-          <el-button
-            size="mini"
-            type="primary"
-            plain
-            @click="$router.push(`/driver/${scope.$index}`)"
-          >
-            货站
           </el-button>
         </template>
       </el-table-column>
@@ -199,12 +183,12 @@ type="text"
 <script>
 
 export default {
-  name:'Car',
+  name:'Car2',
   data () {
     return {
       page:1,
       total:null,
-      value1:[],
+      // value1:[],
       time:'',
       // 搜索功能表单
       souForm:{
@@ -260,12 +244,12 @@ export default {
       this.$router.push({
               path: `/details/${index}`,
             })
-    },
-    handleEdit (index, row) {
-      this.$router.push({
-              path: `/depot/${index}`,
-            })
-    },
+    }
+    // handleEdit (index, row) {
+    //   this.$router.push({
+    //           path: `/depot/${index}`,
+    //         })
+    // },
     // handleDelete (index, row) {
     //   // this.$router.push('/driver')
     //   console.log(index, row)
