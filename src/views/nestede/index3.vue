@@ -28,7 +28,7 @@
           v-model="souForm.name"
           placeholder="请输入货主姓名"
           type="text"
-        /></el-input>
+        />
       </el-form-item>
       <el-form-item
         label="订单号"
@@ -38,7 +38,7 @@
           v-model="souForm.a"
           placeholder="请输入订单号"
           type="text"
-        /></el-input>
+        />
       </el-form-item>
       <!-- <el-form-item
         label="出发地"
@@ -283,7 +283,7 @@ export default {
   methods: {
     // 地图控件
     handler ({BMap, map}) {
-      console.log(BMap, map)
+      // console.log(BMap, map)
       
       this.center.lng = 116.49913
       this.center.lat = 40.037239

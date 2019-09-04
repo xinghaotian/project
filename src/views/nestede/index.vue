@@ -28,7 +28,7 @@
           v-model="souForm.name"
           placeholder="请输入账号"
           type="text"
-        /></el-input>
+        />
       </el-form-item>
       <el-form-item
         label="订单号"
@@ -38,7 +38,7 @@
           v-model="souForm.a"
           placeholder="请输入订单号"
           type="text"
-        /></el-input>
+        />
       </el-form-item>
       <el-form-item
         label="出发地"
@@ -48,7 +48,7 @@
           v-model="souForm.b"
           placeholder="请输入出发地"
           type="text"
-        /></el-input>
+        />
       </el-form-item>
       <el-form-item
         label="目的地"
@@ -58,7 +58,7 @@
           v-model="souForm.c"
           placeholder="请输入目的地"
           type="text"
-        /></el-input>
+        />
       </el-form-item>
       <el-form-item
         label="  订单类型"
@@ -248,7 +248,7 @@ export default {
           per_page:10
         }
       }).then(res=>{
-        console.log(res.data.data)
+        // console.log(res.data.data)
         this.tableData = res.data.data
         this.total=res.data.total
       }).catch(err=>{
