@@ -111,7 +111,8 @@
           password_confirmation: '',
           phone:'',
           company_name:'',
-          remark:''
+          remark:'',
+          auth:2
         },
         rules: {
           company_name:[{ validator: checkBge, trigger: 'blur' }],

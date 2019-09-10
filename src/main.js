@@ -11,7 +11,6 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
-
 import '@/icons' // icon
 import '@/permission' // permission control
 import BaiduMap from 'vue-baidu-map'
@@ -20,7 +19,6 @@ Vue.use(BaiduMap, {
   // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
   ak: 'YOUR_APP_KEY'
 })
-
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -44,6 +42,31 @@ Vue.directive('title', {
   }
 })
 
+router.beforeEach((to, from, next) => {
+
+  const userInfo = window.localStorage.getItem('user_info')
+
+  // 如果是非 /login 页面，判断其登录状态
+  if (to.path !== '/login') {
+    // 如果没有登录，让其跳转到登录页
+    if (!userInfo) {
+      next({ path: '/login' })
+    } else {
+      // 如果登录了，则允许通过
+      next()
+    }
+  } else {
+    // 如果登录了，就不允许访问登录页了
+    if (userInfo) {
+      next(false)
+    } else {
+      // 没有登录，才允许访问登录页
+      next()
+    }
+  }
+})
+router.afterEach((to, from) => {
+})
 new Vue({
   el: '#app',
   router,

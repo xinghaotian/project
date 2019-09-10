@@ -23,10 +23,12 @@
         <el-input
           v-model="souForm.name"
           placeholder="请输入账号"
-        /></el-input>
+        />
       </el-form-item>
       <el-form-item>
-        <el-button>搜索</el-button>
+        <el-button @click="hanleop">
+          搜索
+        </el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -102,9 +104,10 @@
             </el-button> -->
             <el-button
               size="mini"
-              type="danger"
+              type="primary"
+              @click="hanleX(scope.$index, scope.row)"
             >
-              <i class="el-icon-delete" />删除
+              <i class="el-icon-delete" />修改
             </el-button>
           </div>
         </template>
@@ -114,6 +117,8 @@
       background
       layout="prev, pager, next"
       :total="total"
+      :current-page="page"
+      @current-change="handleCurrentChange"
     />
     <el-dialog
       top="5vh"
@@ -222,6 +227,7 @@ export default {
   // http://abc.bjlitian.com:8111/api/third/shippers
   data () {
     return {
+      page:1,
       total:30,
       souForm:{
        name:'',
@@ -250,22 +256,34 @@ export default {
     //   this.filterParams.begin_pubdate = value[0]
     //   this.filterParams.end_pubdate = value[1]
     // },
+    handleCurrentChange(page){
+      this.page = page
+      this.handleG(page)
+    },
     // 第一次获取页面信息
-    handleG(){
+    handleG(page=1){
       let id = JSON.parse(window.localStorage.getItem('user_info')).id
+      let name = this.souForm.name
       this.$http({
         method:'POST',
         url:'/third/shippers',
         data:{
           external_id:id,
-          per_page:10
+          page,
+          per_page:10,
+          name
         }
       }).then(res=>{
         this.form = res.data.data
+        this.total = res.data.total
         console.log(res)
       }).catch(err=>{
         throw err
       })
+    },
+    hanleop(){
+      this.handleG()
+      
     },
     // 详情
     handleEdit(index, row){
@@ -279,6 +297,12 @@ export default {
     this.edit = !this.edit
     // 下面是提交操作
 
+    },
+    hanleX(index, row){ 
+      this.list = row
+    this.dialogFormVisible = true
+    this.edit = false
+      
     },
     // 退出
     handleC(){

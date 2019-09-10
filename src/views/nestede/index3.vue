@@ -19,23 +19,12 @@
           @change="handleDateChange"
         />
       </el-form-item>
-
-      <el-form-item
-        label="货主"
-        label-width="40px"
-      >
-        <el-input
-          v-model="souForm.name"
-          placeholder="请输入货主姓名"
-          type="text"
-        />
-      </el-form-item>
       <el-form-item
         label="订单号"
         label-width="60px"
       >
         <el-input
-          v-model="souForm.a"
+          v-model="souForm.name"
           placeholder="请输入订单号"
           type="text"
         />
@@ -87,7 +76,10 @@
         </el-select>
       </el-form-item> -->
       <el-form-item>
-        <el-button type="primary">
+        <el-button
+          type="primary"
+          @click="handleS"
+        >
           搜索
         </el-button>
       </el-form-item>
@@ -99,25 +91,11 @@
       border
     >
       <el-table-column
-        prop="date"
-        label="类型"
-        width="50"
-      >
-        整车
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="货主"
-        width="70"
-      />
-      <el-table-column
-        width="120"
         label="订单号"
         prop="trans_no"
       />
       <el-table-column
         prop="addr_from"
-
         label="出发地"
       />
       <el-table-column
@@ -125,7 +103,7 @@
         label="目的地"
         prop="addr_to"
       />
-      <el-table-column
+      <!-- <el-table-column
         width="80"
         label="总体积"
         prop="volume"
@@ -134,13 +112,13 @@
         width="60"
         label="总重量"
         prop="weight"
-      />
+      /> -->
       <el-table-column
-        width="160"
+        width="180"
         label="创建时间"
-        prop="created_at"
+        prop="spike_time"
       />
-      <el-table-column
+      <!-- <el-table-column
         width="160"
         label="接单时间"
         prop="updated_at"
@@ -148,11 +126,11 @@
       <el-table-column
         width="80"
         label="状态"
-      />
+      /> -->
       <el-table-column
         prop="delete"
-        label="下发操作"
-        width="120"
+        label="操作"
+        width="180"
       >
         <template slot-scope="scope">
           <el-button
@@ -186,11 +164,13 @@
       background
       layout="prev, pager, next"
       :total="total"
+      :current-page="page"
+      @current-change="handleCurrentChange"
     />
     <el-dialog
       title="位置"
       :visible.sync="dialogVisible"
-      width="60%"
+      width="65%"
     >
       <!-- 地图控件 -->
       <baidu-map
@@ -210,16 +190,36 @@
         slot="footer"
         class="dialog-footer"
       >
-        <div class="block">
-          <el-timeline :reverse="reverse">
-            <el-timeline-item
-              v-for="(activity, index) in activities"
-              :key="index"
-              :timestamp="activity.timestamp"
-            >
-              {{ activity.content }}
-            </el-timeline-item>
-          </el-timeline>
+        <div class="blockk">
+          <table
+            class="tablee"
+            :tableData1="tableData1"
+            cellspacing="0"
+            cellpadding="0"
+          >
+            <tbody>
+              <tr>
+                <td>创建时间</td>
+                <td>{{ tableData1.created_at }}</td>
+              </tr>
+              <tr>
+                <td>接单时间</td>
+                <td>{{ tableData1.spike_time }}</td>
+              </tr>
+              <tr>
+                <td>预约上门</td>
+                <td>{{ tableData1.appoint_time }}</td>
+              </tr>
+              <tr>
+                <td>司机装货</td>
+                <td>{{ tableData1.deliver_time }}</td>
+              </tr>
+              <tr>
+                <td>订单完成</td>
+                <td>{{ tableData1.finish_time }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <el-button
           type="primary"
@@ -237,34 +237,31 @@ export default {
   data () {
     return {
       // 时间线
-       reverse: false,
-        activities: [{
-          content: '活动按期开始',
-          timestamp: '2018-04-15'
-        }, {
-          content: '通过审核',
-          timestamp: '2018-04-13'
-        }, {
-          content: '创建成功',
-          timestamp: '2018-04-11'
-        }],
+      //  reverse: false,
+      //   activities: [{
+      //     content: '活动按期开始',
+      //     timestamp: '2018-04-15'
+      //   }, {
+      //     content: '通过审核',
+      //     timestamp: '2018-04-13'
+      //   }, {
+      //     content: '创建成功',
+      //     timestamp: '2018-04-11'
+      //   }],
         // 地图属性
-       center: {lng: 0, lat: 0},
+      center: {lng: 0, lat: 0},
       zoom: 3,
       dialogVisible:false,
       page:1,
       total:null,
       value1:[],
       time:'',
+      tableData1:{},
       // 搜索功能表单
       souForm:{
-      //  name:'',
-       a:'',
-      //  b:'',
-      //  c:'',
-      //  d:'整车',
-       begin_pubdate: '', // 开始时间
-        end_pubdate: '' // 结束时间
+       name:'',
+       start: '', // 开始时间
+        end: '' // 结束时间
       },
       begin_end_pubdate:[], // 存储日期选择器同步的 [开始时间，结束时间]
       form:{
@@ -291,31 +288,53 @@ export default {
     },
     // 搜索
     handleDateChange(value){
-      this.souForm.begin_pubdate = value[0]
-      this.souForm.end_pubdate = value[1]
+      this.souForm.start = value[0]
+      this.souForm.end = value[1]
     },
     // 第一次获取页面数据
-    handleG(){
+    handleG(page=1){
       let id = JSON.parse(window.localStorage.getItem('user_info')).id
+      const souFormm = {}
+      for (let key in this.souForm) {
+        if (this.souForm[key]) {
+          souFormm[key] = this.souForm[key]
+        }
+      }
       this.$http({
         method:'POST',
-        url:'/third/orders',
+        url:'/order/orderWaySearch',
         data:{
           external_id:id,
-          type:1,
-          per_page:10
+          limit:10,
+          page,
+          ...souFormm
         }
       }).then(res=>{
-        // console.log(res.data.data)
+        console.log(res)
         this.tableData = res.data.data
         this.total=res.data.total
+
+
       }).catch(err=>{
         throw err
       })
     },
+    handleCurrentChange(page){
+      this.page = page
+      this.handleG(page)
+    },
+    //搜索
+    handleS(){
+     this.handleG()
+    },
     // 详情
     handleDetails(index, row){
+      console.log(row)
+              //地图
+        this.center.lat = row.latitude
+        this.center.lng = row.longitude
       this.dialogVisible = true
+      this.tableData1 = row
     },
     // handleEdit (index, row) {
     //   this.$router.push({
@@ -365,15 +384,24 @@ export default {
 }
 .el-dialog__body{
   padding: 0;
-width: 400px;
+  width: 400px;
  position: relative;
 
 }
-.block{
+.blockk{
   display: block;
   position: absolute;
   top: 70px;
-  right: 70px;
+  right: 40px;
 }
-
+.blockk table{
+  border: 1px solid #666;
+  color:#666;
+  background-color: #fff;
+}
+.blockk table td{
+border: 1px solid #666;
+text-align: left;
+padding: 5px 10px;
+}
 </style>

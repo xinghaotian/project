@@ -110,52 +110,82 @@
     <div class="heard">
       <div class="time">
         <div class="time-data1" />
-        <div class="time-data">
-          <i class="iconfont">&#xe882;</i>
-          <div class="right">
-            在途订单
+        <router-link
+          to="/nodetede/index3"
+          class="time-data"
+        >
+          <div>
+            <i class="iconfont">&#xe882;</i>
+            <div class="right">
+              在途订单
+            </div>
           </div>
-        </div>
-        <div class="number">
-          <i class="iconfont">&#xe894;</i>
-          <div class="right">
-            待处理订单
+        </router-link>
+        <router-link
+          to="/nodetede/index4"
+          class="number"
+        >
+          <div>
+            <i class="iconfont">&#xe894;</i>
+            <div class="right">
+              待处理订单
+            </div>
           </div>
-        </div>
-        <div class="number1">
-          <i class="iconfont">&#xe892;</i>
-          <div class="right">
-            已完成订单
+        </router-link>
+        <router-link
+          to="/nodetede/index2"
+          class="number1"
+        >
+          <div>
+            <i class="iconfont">&#xe892;</i>
+            <div class="right">
+              已完成订单
+            </div>
           </div>
-        </div>
-        <div />
+        </router-link>
       </div>
     </div>
     <div class="content">
       <div class="time">
-        <div class="time-data1">
+        <div
+          class="time-data1"
+        >
           <i class="iconfont" />
         </div>
-        <div class="time-data">
-          <i class="iconfont">&#xe8a9;</i>
-          <div class="right">
-            合同制客户
+        <router-link
+          to="/example/table"
+          class="time-data"
+        >
+          <div>
+            <i class="iconfont">&#xe8a9;</i>
+            <div class="right">
+              合同制客户
+            </div>
           </div>
-        </div>
-        <div class="number">
-          <i class="iconfont">&#xe886;</i>
-          <div class="right">
-            订单总数
+        </router-link>
+        <router-link
+to="/example/tree"
+                     class="number"
+>
+          <div>
+            <i class="iconfont">&#xe886;</i>
+            <div class="right">
+              异常订单
+            </div>
           </div>
-        </div>
-        <div class="number1">
-          <i class="iconfont">&#xe88a;</i>
-          <router-link to="/form/index">
+        </router-link>
+        <router-link
+to="/form/index"
+                     class="number1"
+>
+          <div>
+            <i class="iconfont">&#xe88a;</i>
+          
             <div class="right">
               店铺名称
             </div>
-          </router-link>
-        </div>
+          </div>
+        </router-link>
         <div />
       </div>
     </div>
@@ -173,7 +203,7 @@ export default {
     
   },
   methods:{
-     
+
   }
 }
 </script>
@@ -203,9 +233,10 @@ export default {
   height: 200px;
 }
 .right{
-
+  z-index: 1;
   float: right;
-  margin-right: 90px;
+  margin-right: 80px;
+  line-height: 150px;
 }
 .time{
   display: flex;
@@ -218,11 +249,12 @@ export default {
   padding-top: 30px;
 }
 .time-data{
+  z-index: 999;
 flex: 1;
 height: 150px;
 background-color:rgba(32,167,129);
 border-radius: 10px;
-  padding-top: 30px;
+padding-top: 30px;
 
 }
 .time .number{
